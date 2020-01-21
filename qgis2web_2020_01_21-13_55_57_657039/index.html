@@ -6,8 +6,9 @@
         <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
-        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
         <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
         <style>
         html, body, #map {
             width: 100%;
@@ -22,7 +23,8 @@
         <div id="map">
         </div>
         <script src="js/qgis2web_expressions.js"></script>
-        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.js"></script><script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/leaflet-svg-shape-markers.min.js"></script>
         <script src="js/leaflet.rotatedMarker.js"></script>
         <script src="js/leaflet.pattern.js"></script>
         <script src="js/leaflet-hash.js"></script>
@@ -30,8 +32,10 @@
         <script src="js/rbush.min.js"></script>
         <script src="js/labelgun.min.js"></script>
         <script src="js/labels.js"></script>
-        <script src="data/here_1.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="data/THOME21_1.js"></script>
         <script src="data/THOME_VERIFICATION_2.js"></script>
+        <script src="data/here_3.js"></script>
         <script>
         var highlightLayer;
         function highlightFeature(e) {
@@ -40,9 +44,22 @@
         }
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
-        }).fitBounds([[-1.182346879783432,36.94098482096966],[-1.1231444516944489,37.04975500447159]]);
+        }).fitBounds([[-1.1512345397488473,36.958773076677204],[-1.1425605505349592,36.975388624280406]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
         var bounds_group = new L.featureGroup([]);
         function setBounds() {
         }
@@ -56,64 +73,7 @@
         });
         layer_GoogleSatellite_0;
         map.addLayer(layer_GoogleSatellite_0);
-        function pop_here_1(feature, layer) {
-            layer.on({
-                mouseout: function(e) {
-                    if (typeof layer.closePopup == 'function') {
-                        layer.closePopup();
-                    } else {
-                        layer.eachLayer(function(feature){
-                            feature.closePopup()
-                        });
-                    }
-                },
-                mouseover: highlightFeature,
-            });
-            var popupContent = '<table>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['id'] !== null ? Autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            layer.bindPopup(popupContent, {maxHeight: 400});
-        }
-
-        function style_here_1_0() {
-            return {
-                pane: 'pane_here_1',
-                radius: 8.800000000000004,
-                opacity: 1,
-                color: 'rgba(35,35,35,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1,
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(183,72,75,1.0)',
-                interactive: true,
-            }
-        }
-        map.createPane('pane_here_1');
-        map.getPane('pane_here_1').style.zIndex = 401;
-        map.getPane('pane_here_1').style['mix-blend-mode'] = 'normal';
-        var layer_here_1 = new L.geoJson(json_here_1, {
-            attribution: '',
-            interactive: true,
-            dataVar: 'json_here_1',
-            layerName: 'layer_here_1',
-            pane: 'pane_here_1',
-            onEachFeature: pop_here_1,
-            pointToLayer: function (feature, latlng) {
-                var context = {
-                    feature: feature,
-                    variables: {}
-                };
-                return L.circleMarker(latlng, style_here_1_0(feature));
-            },
-        });
-        bounds_group.addLayer(layer_here_1);
-        map.addLayer(layer_here_1);
-        function pop_THOME_VERIFICATION_2(feature, layer) {
+        function pop_THOME21_1(feature, layer) {
             layer.on({
                 mouseout: function(e) {
                     if (typeof layer.closePopup == 'function') {
@@ -152,7 +112,89 @@
                         <td>' + (feature.properties['C_TYPE'] !== null ? Autolinker.link(feature.properties['C_TYPE'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">Long Acc. Code</th>\
+                        <th scope="row">Long Accoount number</th>\
+                        <td>' + (feature.properties['ACC_NO_COD'] !== null ? Autolinker.link(feature.properties['ACC_NO_COD'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_THOME21_1_0() {
+            return {
+                pane: 'pane_THOME21_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(225,89,137,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_THOME21_1');
+        map.getPane('pane_THOME21_1').style.zIndex = 401;
+        map.getPane('pane_THOME21_1').style['mix-blend-mode'] = 'normal';
+        var layer_THOME21_1 = new L.geoJson(json_THOME21_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_THOME21_1',
+            layerName: 'layer_THOME21_1',
+            pane: 'pane_THOME21_1',
+            onEachFeature: pop_THOME21_1,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_THOME21_1_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_THOME21_1);
+        map.addLayer(layer_THOME21_1);
+        function pop_THOME_VERIFICATION_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Account number</th>\
+                        <td>' + (feature.properties['ACC_NO'] !== null ? Autolinker.link(feature.properties['ACC_NO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Longitude</th>\
+                        <td>' + (feature.properties['X'] !== null ? Autolinker.link(feature.properties['X'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Latitude</th>\
+                        <td>' + (feature.properties['Y'] !== null ? Autolinker.link(feature.properties['Y'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ZONE</th>\
+                        <td>' + (feature.properties['ZONE'] !== null ? Autolinker.link(feature.properties['ZONE'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Meter Serial Number</th>\
+                        <td>' + (feature.properties['MTR_SERIAL'] !== null ? Autolinker.link(feature.properties['MTR_SERIAL'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Customer Type</th>\
+                        <td>' + (feature.properties['C_TYPE'] !== null ? Autolinker.link(feature.properties['C_TYPE'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Long Account Number</th>\
                         <td>' + (feature.properties['ACC_NO_COD'] !== null ? Autolinker.link(feature.properties['ACC_NO_COD'].toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
@@ -171,7 +213,7 @@
                 weight: 1,
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(255,158,23,1.0)',
+                fillColor: 'rgba(225,89,137,1.0)',
                 interactive: true,
             }
         }
@@ -195,6 +237,64 @@
         });
         bounds_group.addLayer(layer_THOME_VERIFICATION_2);
         map.addLayer(layer_THOME_VERIFICATION_2);
+        function pop_here_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? Autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_here_3_0() {
+            return {
+                pane: 'pane_here_3',
+                shape: 'diamond',
+                radius: 8.8,
+                opacity: 1,
+                color: 'rgba(128,17,25,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(219,30,42,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_here_3');
+        map.getPane('pane_here_3').style.zIndex = 403;
+        map.getPane('pane_here_3').style['mix-blend-mode'] = 'normal';
+        var layer_here_3 = new L.geoJson(json_here_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_here_3',
+            layerName: 'layer_here_3',
+            pane: 'pane_here_3',
+            onEachFeature: pop_here_3,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.shapeMarker(latlng, style_here_3_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_here_3);
+        map.addLayer(layer_here_3);
         setBounds();
         </script>
     </body>
